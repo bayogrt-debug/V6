@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <meta name="theme-color" content="#0b0b0d">
+
+  <meta
+    name="description"
+    content="SporNRD - Ara Bul Seç Hemen Başla"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+  <!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0d">
+  <meta name="description" content="SporNRD - Ara Bul Seç Hemen Başla">
+  <title>SporNRD</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top-header">
+      <button id="openSearchButton" class="header-icon-button" aria-label="Ara">⌕</button>
+
+      <button id="homeButton" class="brand-area" aria-label="SporNRD ana sayfa">
+        <div class="brand-line">
+          <span class="brand-spor">Spor</span>
+          <span class="brand-letter brand-n">N</span>
+          <span class="brand-letter brand-r">R</span>
+          <span class="brand-letter brand-d">D</span>
+        </div>
+        <span class="brand-slogan">Ara Bul Seç Hemen Başla</span>
+      </button>
+
+      <button id="refreshButton" class="header-icon-button right" aria-label="Yenile">↻</button>
+    </header>
+
+    <main class="main-content">
+      <section id="feedPage" class="page active-page">
+        <div class="category-scroll" aria-label="Kategoriler">
+          <button class="category-item active" data-category="all"><span class="category-circle">★</span><small>Tümü</small></button>
+          <button class="category-item" data-category="coach"><span class="category-circle">A</span><small>Antrenör</small></button>
+          <button class="category-item" data-category="athlete"><span class="category-circle">S</span><small>Sporcu</small></button>
+          <button class="category-item" data-category="event"><span class="category-circle">Y</span><small>Yarışma</small></button>
+          <button class="category-item" data-category="education"><span class="category-circle">E</span><small>Eğitim</small></button>
+          <button class="category-item" data-category="announcement"><span class="category-circle">D</span><small>Duyuru</small></button>
+        </div>
+
+        <div class="feed-heading">
+          <div>
+            <h1>Spor Akışı</h1>
+            <p id="feedSubtitle">Resmî spor kaynaklarından seçilen içerikler</p>
+          </div>
+          <span class="live-badge">CANLI</span>
+        </div>
+
+        <div id="statusBox" class="status-box hidden"></div>
+        <div id="feedContainer" class="feed-container"></div>
+      </section>
+
+      <section id="discoverPage" class="page">
+        <div class="page-title">
+          <h2>Keşfet</h2>
+          <p>Başlık, kategori, şehir veya anahtar kelime ile ara.</p>
+        </div>
+        <div class="discover-search">
+          <input id="discoverInput" type="search" placeholder="Örn. antrenör, SEM, Ankara">
+          <button id="discoverSearchButton">Ara</button>
+        </div>
+        <div id="discoverResults" class="result-list"></div>
+      </section>
+
+      <section id="sourcesPage" class="page">
+        <div class="page-title">
+          <h2>Kaynaklar</h2>
+          <p>SporNRD’nin takip ettiği doğrulanmış spor kaynakları.</p>
+        </div>
+
+        <div class="source-card">
+          <div class="source-logo">TYF</div>
+          <div class="source-info">
+            <div class="source-name-row">
+              <strong>Türkiye Yüzme Federasyonu</strong>
+              <span class="verified">✓</span>
+            </div>
+            <span>FEDERASYON · YÜZME</span>
+            <p>Akıllı editör motoru başlık, detay, tarih, konum, görsel ve resmî bağlantıları analiz eder.</p>
+          </div>
+        </div>
+
+        <div class="source-stats">
+          <div><strong id="sourcePostCount">0</strong><span>Canlı içerik</span></div>
+          <div><strong id="sourceLastUpdate">-</strong><span>Son güncelleme</span></div>
+        </div>
+
+        <div class="future-source-box">
+          <strong>Öğrenen sistem aktif</strong>
+          <p>Woow, Kaydet, Paylaş, Çöp, Detay ve anlık tepkiler cihazdaki öğrenme modelini geliştirir. Global öğrenme için Cloudflare KV daha sonra bağlanabilir.</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-navigation" aria-label="Alt menü">
+      <button class="bottom-nav-item active" data-page="feedPage"><span class="nav-symbol">⌂</span><small>Ana Akış</small></button>
+      <button class="bottom-nav-item" data-page="discoverPage"><span class="nav-symbol">⌕</span><small>Keşfet</small></button>
+      <button class="bottom-nav-item" data-page="sourcesPage"><span class="nav-symbol">◎</span><small>Kaynaklar</small></button>
+    </nav>
+  </div>
+
+  <div id="searchModal" class="modal" aria-hidden="true">
+    <div class="modal-sheet">
+      <div class="modal-title-row">
+        <div><h3>Ara</h3><p>SporNRD canlı akışında ara</p></div>
+        <button class="modal-close" data-close="searchModal">×</button>
+      </div>
+      <input id="globalSearchInput" class="form-control" type="search" placeholder="Aramak istediğin şeyi yaz">
+      <div id="globalSearchResults" class="modal-results result-list"></div>
+    </div>
+  </div>
+
+  <div id="detailModal" class="modal" aria-hidden="true">
+    <div class="modal-sheet">
+      <div class="modal-title-row">
+        <div><h3>Detay</h3><p>SporNRD özeti + resmî kaynak</p></div>
+        <button class="modal-close" data-close="detailModal">×</button>
+      </div>
+      <div id="detailContent" class="detail-content"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/liveSources.js"></script>
+  <script src="js/learningEngine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
+  content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="SporNRD"
+  >
+
+  <title>SporNRD</title>
+
+  <link
+    rel="manifest"
+    href="manifest.json"
+  >
+
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href="assets/icons/icon.svg"
+  >
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  >
+
+</head>
+
+
+<body>
+
+<div id="app" class="app">
+
+
+  <!-- ÜST SABİT ALAN -->
+
+  <header class="top-header">
+
+    <button
+      id="openSearchButton"
+      class="header-icon-button"
+      aria-label="Ara"
+    >
+      ⌕
+    </button>
+
+
+    <button
+      id="homeButton"
+      class="brand-area"
+      aria-label="Ana Sayfa"
+    >
+
+      <div class="brand-line">
+
+        <span class="brand-spor">
+          Spor
+        </span>
+
+        <span class="brand-letter brand-n">
+          N
+        </span>
+
+        <span class="brand-letter brand-r">
+          R
+        </span>
+
+        <span class="brand-letter brand-d">
+          D
+        </span>
+
+      </div>
+
+      <span class="brand-slogan">
+        Ara Bul Seç Hemen Başla
+      </span>
+
+    </button>
+
+
+    <button
+      id="refreshButton"
+      class="header-icon-button right"
+      aria-label="Yenile"
+    >
+      ↻
+    </button>
+
+  </header>
+
+
+
+  <!-- ANA İÇERİK -->
+
+  <main class="main-content">
+
+
+    <!-- ANA AKIŞ -->
+
+    <section
+      id="feedPage"
+      class="page active-page"
+    >
+
+
+      <!-- KATEGORİLER -->
+
+      <div class="category-scroll">
+
+        <button
+          class="category-item active"
+          data-category="all"
+        >
+
+          <span class="category-circle">
+            ★
+          </span>
+
+          <small>
+            Tümü
+          </small>
+
+        </button>
+
+
+        <button
+          class="category-item"
+          data-category="coach"
+        >
+
+          <span class="category-circle">
+            A
+          </span>
+
+          <small>
+            Antrenör
+          </small>
+
+        </button>
+
+
+        <button
+          class="category-item"
+          data-category="athlete"
+        >
+
+          <span class="category-circle">
+            S
+          </span>
+
+          <small>
+            Sporcu
+          </small>
+
+        </button>
+
+
+        <button
+          class="category-item"
+          data-category="event"
+        >
+
+          <span class="category-circle">
+            Y
+          </span>
+
+          <small>
+            Yarışma
+          </small>
+
+        </button>
+
+
+        <button
+          class="category-item"
+          data-category="education"
+        >
+
+          <span class="category-circle">
+            E
+          </span>
+
+          <small>
+            Eğitim
+          </small>
+
+        </button>
+
+
+        <button
+          class="category-item"
+          data-category="announcement"
+        >
+
+          <span class="category-circle">
+            D
+          </span>
+
+          <small>
+            Duyuru
+          </small>
+
+        </button>
+
+      </div>
+
+
+
+      <!-- BAŞLIK -->
+
+      <div class="feed-heading">
+
+        <div>
+
+          <h1>
+            Spor Akışı
+          </h1>
+
+          <p id="feedSubtitle">
+            Resmî spor kaynaklarından seçilen içerikler
+          </p>
+
+        </div>
+
+
+        <div
+          id="liveBadge"
+          class="live-badge"
+        >
+          CANLI
+        </div>
+
+      </div>
+
+
+
+      <!-- DURUM -->
+
+      <div
+        id="statusBox"
+        class="status-box hidden"
+      >
+      </div>
+
+
+
+      <!-- HABERLER -->
+
+      <div
+        id="feedContainer"
+        class="feed-container"
+      >
+      </div>
+
+    </section>
+
+
+
+    <!-- KEŞFET -->
+
+    <section
+      id="discoverPage"
+      class="page"
+    >
+
+      <div class="page-title">
+
+        <h2>
+          Keşfet
+        </h2>
+
+        <p>
+          Gerçek spor içeriklerinde ara.
+        </p>
+
+      </div>
+
+
+
+      <div class="discover-search">
+
+        <input
+          id="discoverInput"
+          type="search"
+          placeholder="Antrenör, sporcu, Ankara, şampiyona..."
+        >
+
+        <button id="discoverSearchButton">
+          Ara
+        </button>
+
+      </div>
+
+
+
+      <div
+        id="discoverResults"
+        class="result-list"
+      >
+      </div>
+
+    </section>
+
+
+
+    <!-- KAYNAKLAR -->
+
+    <section
+      id="sourcesPage"
+      class="page"
+    >
+
+      <div class="page-title">
+
+        <h2>
+          Kaynaklar
+        </h2>
+
+        <p>
+          SporNRD'nin takip ettiği doğrulanmış kaynaklar.
+        </p>
+
+      </div>
+
+
+
+      <div class="source-card">
+
+        <div class="source-logo">
+          TYF
+        </div>
+
+
+        <div class="source-info">
+
+          <div class="source-name-row">
+
+            <strong>
+              Türkiye Yüzme Federasyonu
+            </strong>
+
+            <span class="verified">
+              ✓
+            </span>
+
+          </div>
+
+
+          <span>
+            FEDERASYON · YÜZME
+          </span>
+
+
+          <p>
+            Haber ve duyurular otomatik olarak kontrol edilir.
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="source-stats">
+
+        <div>
+
+          <strong id="sourcePostCount">
+            0
+          </strong>
+
+          <span>
+            Seçilen içerik
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <strong id="sourceLastUpdate">
+            -
+          </strong>
+
+          <span>
+            Son kontrol
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="future-source-box">
+
+        <strong>
+          Sıradaki kaynaklar
+        </strong>
+
+        <p>
+          Diğer federasyonlar, Gençlik ve Spor Bakanlığı,
+          il müdürlükleri, medya, kulüpler ve diğer spor kaynakları
+          aynı sisteme eklenecek.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+
+  <!-- ALT MENÜ -->
+
+  <nav class="bottom-navigation">
+
+    <button
+      class="bottom-nav-item active"
+      data-page="feedPage"
+    >
+
+      <span class="nav-symbol">
+        ⌂
+      </span>
+
+      <small>
+        Ana Akış
+      </small>
+
+    </button>
+
+
+    <button
+      class="bottom-nav-item"
+      data-page="discoverPage"
+    >
+
+      <span class="nav-symbol">
+        ⌕
+      </span>
+
+      <small>
+        Keşfet
+      </small>
+
+    </button>
+
+
+    <button
+      class="bottom-nav-item"
+      data-page="sourcesPage"
+    >
+
+      <span class="nav-symbol">
+        ◎
+      </span>
+
+      <small>
+        Kaynaklar
+      </small>
+
+    </button>
+
+  </nav>
+
+
+
+  <!-- ARAMA MODAL -->
+
+  <div
+    id="searchModal"
+    class="modal"
+  >
+
+    <div class="modal-sheet">
+
+      <div class="modal-title-row">
+
+        <div>
+
+          <h3>
+            SporNRD'de Ara
+          </h3>
+
+          <p>
+            Ara Bul Seç Hemen Başla
+          </p>
+
+        </div>
+
+
+        <button
+          class="modal-close"
+          data-close="searchModal"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <input
+        id="globalSearchInput"
+        class="form-control"
+        type="search"
+        placeholder="Haber, antrenör, sporcu, şehir..."
+      >
+
+
+      <div
+        id="globalSearchResults"
+        class="result-list modal-results"
+      >
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- DETAY MODAL -->
+
+  <div
+    id="detailModal"
+    class="modal"
+  >
+
+    <div class="modal-sheet">
+
+      <div class="modal-title-row">
+
+        <div>
+
+          <h3>
+            Haber Detayı
+          </h3>
+
+          <p>
+            Türkiye Yüzme Federasyonu
+          </p>
+
+        </div>
+
+
+        <button
+          class="modal-close"
+          data-close="detailModal"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div
+        id="detailContent"
+        class="detail-content"
+      >
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- TOAST -->
+
+  <div
+    id="toast"
+    class="toast"
+    aria-live="polite"
+  >
+  </div>
+
+
+</div>
+
+
+
+<script src="js/config.js"></script>
+
+<script src="js/liveSources.js"></script>
+
+<script src="js/app.js"></script>
+
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+  window.addEventListener(
+    "load",
+    function () {
+
+      navigator.serviceWorker
+        .register("./sw.js")
+        .catch(
+          function (error) {
+
+            console.log(
+              "Service Worker:",
+              error
+            );
+
+          }
+        );
+
+    }
+  );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
